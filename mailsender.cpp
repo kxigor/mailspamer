@@ -7,10 +7,10 @@
 #include <locale.h>
 
 #define CREATE_BY		"IGORERFC"
-#define VERSION			"VERSION 3.49"
+#define VERSION			"VERSION 3.50"
 
-#define cout_use_r 		std::cout << endl << " ! Write r for random !  "<< endl << endl
-#define cout_nouse_r 	std::cout << endl << " ! r doesn't work here ! "<< endl << endl
+#define cout_use_rs 	std::cout << endl << " ! Write r for random  ! "<< endl<< " ! Write s for sequence !  "<< endl << endl
+#define cout_nouse_rs 	std::cout << endl << " ! r/s doesn't work here ! "<< endl << endl
 
 
 using namespace std;
@@ -27,6 +27,7 @@ const string name_file_mails = "postal.txt";//The files must be created and loca
 const string google_service = "smtp://smtp.gmail.com:587" ;
 
 int number_of_errors = 0;
+unsigned long long number_sequence=0;
 
 struct upload_status { int lines_read; };
 struct logpass {
@@ -184,7 +185,10 @@ string rand_str(string str_input)
 	if (str_input[0]=='r')
 		return gen_random(rand() % 25 + 1);
 	else
-		return str_input;
+		if(str_input[0]=='s')
+			return string(to_string(++number_sequence));
+		else
+			return str_input;
 }
 
 void use_threads_for_send_mail(	vector <logpass> mails, 
@@ -247,13 +251,13 @@ int main()
 	
 	std::cout << " Write an email address for sending messages : "	;	std::getline ( std::cin,mail_for_send);
 
-	cout_use_r;
+	cout_use_rs;
 	
 	std::cout << " Enter your name : "								;	std::getline ( std::cin,mail_name);
-	std::cout << " Enter the subject of the letter (should r) : "	;	std::getline ( std::cin,mail_subject);
+	std::cout << " Enter the subject of the letter (should r/s) : "	;	std::getline ( std::cin,mail_subject);
 	std::cout << " Enter the text of the letter  : "				;	std::getline ( std::cin,mail_body );
 	
-	cout_nouse_r;
+	cout_nouse_rs;
 	
 	std::cout << " Enter the number of cycles  ( min - 1 ) : ";
 	std::cin >> num_cy;
