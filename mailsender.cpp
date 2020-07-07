@@ -7,11 +7,7 @@
 #include <locale.h>
 
 #define CREATE_BY		"IGORERFC"
-#define VERSION			"VERSION 3.50"
-
-#define cout_use_rs 	std::cout << endl << " ! Write r for random  ! "<< endl<< " ! Write s for sequence !  "<< endl << endl
-#define cout_nouse_rs 	std::cout << endl << " ! r/s doesn't work here ! "<< endl << endl
-
+#define VERSION			"VERSION 3.51"
 
 using namespace std;
 
@@ -23,11 +19,12 @@ enum{
 static std::string payloadText[11];
 
 const string name_file_mails = "postal.txt";//The files must be created and located in the same folder as the program
+const string name_file_text  = "text.txt";//The files must be created and located in the same folder as the program
 
 const string google_service = "smtp://smtp.gmail.com:587" ;
 
-int number_of_errors = 0;
-unsigned long long number_sequence=0;
+unsigned long number_of_errors = 0;
+unsigned long number_sequence =  0;
 
 struct upload_status { int lines_read; };
 struct logpass {
@@ -150,10 +147,36 @@ CURLcode sendEmail(const std::string &to,
     return ret;
 }
 
-void get_mail_from_txt(ifstream * fout, vector <logpass> *mails)
+string get_text_from_txt()
 {
+	ifstream fout(name_file_text);
+	
+	if (!fout.is_open())
+	{
+		 v_error(" File opening error! "+name_file_text,fatalerror);
+		 exit(-1);
+	 }
+	 
 	char a[200];
-	while (fout->getline(a, INT_MAX)) {
+	string for_ret;
+	while (fout.getline(a, INT_MAX)){
+		for_ret+=a;
+		for_ret+='\n';
+	}
+	return for_ret;
+}
+
+void get_mail_from_txt(vector <logpass> *mails)
+{
+	ifstream fout(name_file_mails);
+	
+	if (!fout.is_open())
+	{
+		 v_error(" File opening error! "+name_file_mails,fatalerror);
+		 exit(-1);
+	 }
+	char a[400];
+	while (fout.getline(a, INT_MAX)) {
 		logpass lp;
 		bool b = false;
 		for (int i = 0; a[i] != '\0'; i++) {
@@ -166,7 +189,6 @@ void get_mail_from_txt(ifstream * fout, vector <logpass> *mails)
 		mails->push_back(lp);
 	}
 }
-
 string gen_random(const int len) {
     static const char alphanum[] =
         "0123456789"
@@ -180,7 +202,7 @@ string gen_random(const int len) {
     return s;
 }
 
-string rand_str(string str_input)
+string what_str(string str_input)
 {
 	if (str_input[0]=='r')
 		return gen_random(rand() % 25 + 1);
@@ -197,18 +219,18 @@ void use_threads_for_send_mail(	vector <logpass> mails,
 								string mail_name,
 								string mail_subject,
 								string mail_body) 
-{
+{	
 	for (int i = 0; i < num_cy; i++)
 		for (const auto & mail : mails)
 		{
 			  sendEmail
 			  (
 				mail_for_send			.c_str(),
-				mail.mail				.c_str(),
+				mail.mail			.c_str(),
 				mail_for_send			.c_str(),
-				rand_str(mail_name)		.c_str(),
-				rand_str(mail_subject)	.c_str(),
-				rand_str(mail_body)		.c_str(),
+				what_str(mail_name)		.c_str(),
+				what_str(mail_subject)		.c_str(),
+				what_str(mail_body)		.c_str(),
 				google_service			.c_str(),
 				mail.mail_pass			.c_str()
 				);
@@ -239,25 +261,22 @@ int main()
 	int num_cy = 0;
 	
 	
-	ifstream fout(name_file_mails);
-	if (!fout.is_open())
-	{
-		 v_error(" File opening error! ",fatalerror);
-		 exit(-1);
-	 }
-
-	get_mail_from_txt(&fout, &mails);
+	get_mail_from_txt(&mails);
+	
 	std::cout << " " << mails.size() << " - GOOGLE MAIL WAS FOUND  " << endl << endl;
 	
-	std::cout << " Write an email address for sending messages : "	;	std::getline ( std::cin,mail_for_send);
+	std::cout << " Write an email address for sending messages : "	;std::getline ( std::cin,mail_for_send);
 
-	cout_use_rs;
+	std::cout << endl << " ! Write r for random  ! "<< endl;
+	std::cout << " ! Write s for sequence !  "<< endl << endl;
 	
-	std::cout << " Enter your name : "								;	std::getline ( std::cin,mail_name);
-	std::cout << " Enter the subject of the letter (should r/s) : "	;	std::getline ( std::cin,mail_subject);
-	std::cout << " Enter the text of the letter  : "				;	std::getline ( std::cin,mail_body );
+	std::cout << " Enter your name : "				;std::getline ( std::cin,mail_name);
+	std::cout << " Enter the subject of the letter (should r/s) : "	;std::getline ( std::cin,mail_subject);
+	std::cout << " ! Enter fr to use the text from the file !  " << endl;
+	std::cout << " Enter the text of the letter  : "		;std::getline ( std::cin,mail_body );
+	if(mail_body == "fr") mail_body = get_text_from_txt();
 	
-	cout_nouse_rs;
+	std::cout << endl << " ! r/s doesn't work here ! "<< endl << endl;
 	
 	std::cout << " Enter the number of cycles  ( min - 1 ) : ";
 	std::cin >> num_cy;
@@ -265,7 +284,7 @@ int main()
 	if (num_cy < 1)	v_error(" Invalid input data ",fatalerror);
 	
 	std::cout << endl << " Don't specify too much threads, google services will block you ( 10 < )" << endl << endl;
-	std::cout << " Enter the number of threads ( min - 1 ) : ";std::cin>>num_threads;
+	std::cout << " Enter the number of threads ( min - 1 ) : ";std::cin>>num_threads;cout<<endl;
 	
 	if (num_threads < 1)v_error(" Invalid input data ",fatalerror);
 	
