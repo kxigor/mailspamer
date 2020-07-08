@@ -7,7 +7,7 @@
 #include <locale.h>
 
 #define CREATE_BY		"IGORERFC"
-#define VERSION			"VERSION 3.51"
+#define VERSION			"VERSION 3.52"
 
 using namespace std;
 
