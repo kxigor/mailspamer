@@ -11,9 +11,9 @@ sudo apt-get install curl
 //Depends on your OS
 sudo apt-get install curl libcurl4 libcurl3-dev 
 
-git clone https://github.com/Garik11/mailsender
+git clone https://github.com/Garik11/mailspamer
 cd mailsender
-g++ mailsender.cpp -lcurl -o name -pthread
+g++ mailspamer.cpp -lcurl -o name -pthread
 ./name
 ```
 + You need to file postal.txt enter gmail mail in the format :**gmail@gmail.com:pass**
