@@ -12,7 +12,7 @@ sudo apt-get install curl
 sudo apt-get install curl libcurl4 libcurl3-dev 
 
 git clone https://github.com/Garik11/mailspamer
-cd mailsender
+cd mailspamer
 g++ mailspamer.cpp -lcurl -o name -pthread
 ./name
 ```
