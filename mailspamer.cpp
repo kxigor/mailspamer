@@ -16,15 +16,16 @@ enum{
 		error_nof  = 0
 };
 
-static std::string payloadText[11];
-
-const string name_file_mails = "postal.txt";//The files must be created and located in the same folder as the program
-const string name_file_text  = "text.txt";//The files must be created and located in the same folder as the program
+const string name_file_mails   = "postal.txt";//The files must be created and located in the same folder as the program
+const string name_file_text    = "text.txt";//The files must be created and located in the same folder as the program
+const string name_file_history = "history.txt";//The files must be created and located in the same folder as the program
 
 const string google_service = "smtp://smtp.gmail.com:587" ;
 
 unsigned long number_of_errors = 0;
 unsigned long number_sequence =  0;
+
+static std::string payloadText[11];
 
 struct upload_status { int lines_read; };
 struct logpass {
@@ -32,10 +33,17 @@ struct logpass {
 	string mail_pass;
 };
 
+//void error
 void v_error(string error_text,bool fatal_or_not) 
 {
-	std::cout <<endl<<" FATAL ERROR :" <<error_text << endl << endl;
-	if(fatal_or_not)exit(-1);
+	if(fatal_or_not == error_nof){
+		std::cout << endl << " ERROR :" << error_text << endl << endl;
+	}
+	
+	if(fatal_or_not == fatalerror){
+		std::cout << endl << " FATAL ERROR :" << error_text << endl << endl;
+		exit(-1);
+	}
 }
 
 void setPayloadText(const std::string &to,
@@ -89,6 +97,7 @@ static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
     return 0;
 }
 
+//sending an email using curl
 CURLcode sendEmail(const std::string &to,
                    const std::string &from,
                    const std::string &cc,
@@ -147,54 +156,15 @@ CURLcode sendEmail(const std::string &to,
     return ret;
 }
 
-string get_text_from_txt()
+//generating a random string
+string gen_random(const int len) 
 {
-	ifstream fout(name_file_text);
-	
-	if (!fout.is_open())
-	{
-		 v_error(" File opening error! "+name_file_text,fatalerror);
-		 exit(-1);
-	 }
-	 
-	char a[200];
-	string for_ret;
-	while (fout.getline(a, INT_MAX)){
-		for_ret+=a;
-		for_ret+='\n';
-	}
-	return for_ret;
-}
-
-void get_mail_from_txt(vector <logpass> *mails)
-{
-	ifstream fout(name_file_mails);
-	
-	if (!fout.is_open())
-	{
-		 v_error(" File opening error! "+name_file_mails,fatalerror);
-		 exit(-1);
-	 }
-	char a[400];
-	while (fout.getline(a, INT_MAX)) {
-		logpass lp;
-		bool b = false;
-		for (int i = 0; a[i] != '\0'; i++) {
-			if (b == true)
-				lp.mail_pass += a[i];
-			if (a[i] != ':' && b == false)
-				lp.mail += a[i];
-			else b = true;
-		}
-		mails->push_back(lp);
-	}
-}
-string gen_random(const int len) {
     static const char alphanum[] =
         "0123456789"
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         "abcdefghijklmnopqrstuvwxyz";
 	string s;
+	
     for (int i = 0; i < len; ++i) {
         s += alphanum[rand() % (sizeof(alphanum) - 1)];
     }
@@ -202,17 +172,19 @@ string gen_random(const int len) {
     return s;
 }
 
+//Determining what this string is
 string what_str(string str_input)
 {
-	if (str_input[0]=='r')
+	if (str_input[0] == 'r')
 		return gen_random(rand() % 25 + 1);
 	else
-		if(str_input[0]=='s')
+		if(str_input[0] == 's')
 			return string(to_string(++number_sequence));
 		else
 			return str_input;
 }
 
+//Sending emails (in the amount specified by the user)
 void use_threads_for_send_mail(	vector <logpass> mails, 
 								int num_cy,
 								string mail_for_send, 
@@ -237,14 +209,75 @@ void use_threads_for_send_mail(	vector <logpass> mails,
 		}
 }
 
+//Getting text from a file text.txt
+string get_text_from_txt()
+{
+	fstream fout;
+	fout.open(name_file_text,std::ios::in);
+	
+	if (!fout.is_open())
+		 v_error(" File opening error! " + name_file_text, fatalerror);
+		 
+	char a[200];
+	string for_ret;
+	
+	while (fout.getline(a, INT_MAX)){
+		for_ret += a;
+		for_ret += '\n';
+	}
+	fout.close();
+	return for_ret;
+}
+
+//Getting usernames and passwords from a file postal.txt
+void get_mail_from_txt(vector <logpass> *mails)
+{
+	fstream fout;
+	fout.open(name_file_mails,std::ios::in);
+	
+	if (!fout.is_open())
+		 v_error(" File opening error! " + name_file_mails, fatalerror);
+		 
+	char a[400];
+	
+	while (fout.getline(a, INT_MAX)) {
+		logpass lp;
+		bool b = false;
+		for (int i = 0; a[i] != '\0'; i++) {
+			if (b == true)
+				lp.mail_pass += a[i];
+			if (a[i] != ':' && b == false)
+				lp.mail += a[i];
+			else b = true;
+		}
+		mails->push_back(lp);
+	}
+	fout.close();
+}
+
+//Write history to the history.txt file
+void history_write(string str_history)
+{
+	ofstream fout;
+	fout.open(name_file_history,std::ios::out | ios_base::app);
+	
+	if (!fout.is_open())
+		 v_error(" File opening error! " + name_file_history, fatalerror);
+		 
+	fout << str_history;
+	fout.close();
+}
+
+//preview...
 void preview()
 {
 	cout << " CREATE BY " << CREATE_BY << endl;
-	cout << " VERSION "   << VERSION   << endl << endl;;
+	cout << " VERSION "   << VERSION   << endl << endl;
 }
 
 int main()
 {
+	/*Init*/
 	preview();
 	srand(time(NULL));
 	setlocale(LC_ALL,"Rus"); //Eng also works
@@ -264,17 +297,25 @@ int main()
 	get_mail_from_txt(&mails);
 	
 	std::cout << " " << mails.size() << " - GOOGLE MAIL WAS FOUND  " << endl << endl;
+	/*Init end*/
 	
+	
+	/*Read*/
 	std::cout << " Write an email address for sending messages : "	;std::getline ( std::cin,mail_for_send);
-
+	history_write(mail_for_send+'\n');
+	
 	std::cout << endl << " ! Write r for random  ! "<< endl;
 	std::cout << " ! Write s for sequence !  "<< endl << endl;
 	
 	std::cout << " Enter your name : "				;std::getline ( std::cin,mail_name);
 	std::cout << " Enter the subject of the letter (should r/s) : "	;std::getline ( std::cin,mail_subject);
-	std::cout << " ! Enter fr to use the text from the file !  " << endl;
+	
+	std::cout << endl << " ! Enter fr to use the text from the file !  " << endl << endl;
+	
 	std::cout << " Enter the text of the letter  : "		;std::getline ( std::cin,mail_body );
+	
 	if(mail_body == "fr") mail_body = get_text_from_txt();
+	cout << endl <<" The text was taken from the file successfully ! " << endl;
 	
 	std::cout << endl << " ! r/s doesn't work here ! "<< endl << endl;
 	
@@ -287,7 +328,10 @@ int main()
 	std::cout << " Enter the number of threads ( min - 1 ) : ";std::cin>>num_threads;cout<<endl;
 	
 	if (num_threads < 1)v_error(" Invalid input data ",fatalerror);
+	/*Read end*/
 	
+	
+	/*Sending mails*/
 	thread* th = new thread[num_threads];//Fine,pc is dead
 	for (int i = 0; i < num_threads; i++)
 		th[i] = std::thread
@@ -302,5 +346,11 @@ int main()
 		);
 	for (int i = 0; i < num_threads; i++)
 		th[i].join();
-	cout<<endl<<" "<<num_cy*num_threads*mails.size()-number_of_errors<<" - emails sent successfully !"<<endl;
+	/*Sending mails*/
+	
+	
+	/*Output of the work result*/
+	cout << endl << " " << num_cy * num_threads * mails.size() - number_of_errors << " - emails sent successfully !" << endl;
+	/*Output of the work result end*/
+	
 }
