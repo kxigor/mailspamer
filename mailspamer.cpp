@@ -358,7 +358,7 @@ int main()
 	
 	if (num_cy < 1)	v_error(" Invalid input data ",fatalerror);
 	
-	cout << endl << " Don't specify too much threads, google services will block you ( 10 < )" << endl << endl;
+	cout << endl << " Don't specify too much threads, google services will block you ( 30 < )" << endl << endl;
 	cout << " Enter the number of threads ( min - 1 ) : ";std::cin>>num_threads;cout<<endl;
 	
 	if (num_threads < 1)v_error(" Invalid input data ",fatalerror);
