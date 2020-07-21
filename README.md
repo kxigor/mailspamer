@@ -31,3 +31,12 @@ Formula for the number of emails sent: **number of threads * number of cycles * 
 ![alt text](https://i.yapx.ru/IQ37M.png)
 ![alt text](https://i.yapx.ru/IQ37S.jpg)
 ![alt text](https://i.yapx.ru/IQ37Y.jpg)
+
+__________*_____*
+_________*_*****_*
+________*_(O)_(O)_*
+_______**____V____**
+_______**_________**
+_______**_________**
+________*_________*
+_________***___***
