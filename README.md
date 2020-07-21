@@ -1,5 +1,5 @@
 # Mailspamer
-A program that can be used to spam emails.Extensive functionality . Written in c++
+A program that can be used to spam emails.Extensive functionality. The program is written in the c++programming language
 
 ### Installation and use
 To install it you will need the curl library and of course c++
