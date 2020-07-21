@@ -27,3 +27,4 @@ I see some difficulties with the strings in the file, so if the string is very l
 ![alt text](https://i.yapx.ru/IQ37B.jpg)
 ![alt text](https://i.yapx.ru/IQ37M.png)
 ![alt text](https://i.yapx.ru/IQ37S.jpg)
+![alt text](https://i.yapx.ru/IQ37Y.jpg)
