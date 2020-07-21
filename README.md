@@ -20,6 +20,7 @@ g++ mailspamer.cpp -lcurl -o name -pthread
 + Gmail must have access enabled through unreliable sources (otherwise it will not allow the program to send mail)
 
 If you specify too many threads , a segmentation error may occur, since your device may not be able to handle the load (I have a limit on my phone of 50 )
+
 I see some difficulties with the strings in the file, so if the string is very long, then most likely there will be a segmentation error
 
 ![alt text](https://i.yapx.ru/IQ36w.jpg)
