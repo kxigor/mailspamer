@@ -21,4 +21,4 @@ g++ mailspamer.cpp -lcurl -o name -pthread
 ![alt text](https://i.yapx.ru/IGXoW.png)
 ![alt text](https://i.yapx.ru/IGXo1.jpg)
 
-I already see some shortcomings, I will fix them
+If you specify too many threads , a segmentation error may occur, since your device may not be able to handle the load (I have a limit on my phone of 50 )
