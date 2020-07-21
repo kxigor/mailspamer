@@ -23,7 +23,7 @@ If you specify too many threads , a segmentation error may occur, since your dev
 
 I see some difficulties with the strings in the file, so if the string is very long, then most likely there will be a segmentation error
 
-Number formula sent email:**number of threads * number of cycles * number of emails**
+Number formula sent email: **number of threads * number of cycles * number of emails**
 
 ![alt text](https://i.yapx.ru/IQ36w.jpg)
 ![alt text](https://i.yapx.ru/IQ366.jpg)
