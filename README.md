@@ -27,6 +27,7 @@ I see some difficulties with the strings in the file, so if the string is very l
 
 Formula for the number of emails sent: **number of threads * number of cycles * number of emails**
 
+
 Added the ability to use arguments
 ![alt text](https://i.yapx.ru/I9OfW.png)
 
