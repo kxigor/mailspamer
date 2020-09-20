@@ -46,11 +46,13 @@ enum{
 void v_error(string error_text,bool fatal_or_not) 
 {
 	if(fatal_or_not == error_no_fatal){
-		cout << endl << " ERROR :" << error_text << endl << endl;
+		cout << endl << " ERROR :" << error_text << endl
+			<<" Use the argument '-h' "<<endl;
 	}
 	
 	if(fatal_or_not == error_fatal){
-		cout << endl << " FATAL ERROR :" << error_text << endl << endl;
+		cout << endl << " FATAL ERROR :" << error_text << endl
+			<<" Use the argument '-h' "<<endl;
 		exit(-1);
 	}
 }
@@ -317,7 +319,7 @@ void arguments_function(string *email_attack,
 		string str(argv[1]);
 		if(str == "-h" || str == "--help"){
 			cout<< endl;
-			cout<< " Use '-h' or '-help' arguments to get information " << endl << endl;
+			cout<< " Use '-h' or '--help' arguments to get information " << endl << endl;
 			cout<< " You can use 'r' for random or 's' for sequence" << endl;
 			cout<< " Enter \"fr\" to use the text from the file" << endl;
 			cout<< " To use arguments, enter all 6 in order : "	<< endl
@@ -350,7 +352,7 @@ void arguments_function(string *email_attack,
 	} 
 	else
 		if(argc != 1)
-			v_error(" Incorrect arguments! Use the argument '-h'",error_fatal);
+			v_error(" Incorrect arguments! ", error_fatal);
 }
 
 void preview()
@@ -414,7 +416,7 @@ int main(int argc, char *argv[])
 		cout << " Enter the subject of the letter (r/s) : ";
 		getline ( cin,content.subject);
 	
-		cout << " Enter \"fr\" to use the text from the file" << endl;
+		cout << " Enter 'fr' to use the text from the file" << endl;
 		cout << " Enter the text of the letter (r/s/fr) : ";
 		getline ( cin,content.body);
 	}
@@ -430,11 +432,11 @@ int main(int argc, char *argv[])
 	{
 		cout << " Don't specify too much threads, google services will block you (100 <)" << endl;
 		cout << " Enter the number of threads (min - 1 & 100 <) : ";
-		cin>>num_threads;
+		cin >> num_threads;
 	}
 	if (num_threads < 1)v_error(" Invalid input data ",error_fatal);
 	
-	cout <<" "<< num_cycles * num_threads * emails.size() << " - will be sent " << endl << endl;
+	cout << " " << num_cycles * num_threads * emails.size() << " - will be sent " << endl << endl;
 	/*Read end*/
 	
 	/*Sending mails*/
