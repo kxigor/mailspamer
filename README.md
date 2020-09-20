@@ -18,7 +18,7 @@ cd mailspamer
 g++ mailspamer.cpp -lcurl -o name -pthread
 ./name
 ```
-+ You need to file postal.txt enter gmail mail in the format :**gmail@gmail.com:pass**
++ You need to file "emails" enter gmail mails in the format :**gmail@gmail.com:pass**
 + Gmail must have access enabled through unreliable sources (otherwise it will not allow the program to send mail)
 
 If you specify too many threads , a segmentation error may occur, since your device may not be able to handle the load (I have a limit on my phone of 50 )
