@@ -25,33 +25,6 @@ If you specify too many threads , a segmentation error may occur, since your dev
 
 I see some difficulties with the strings in the file, so if the string is very long, then most likely there will be a segmentation error
 
-Formula for the number of emails sent: **number of threads * number of cycles * number of emails**
-
-
-Added the ability to use arguments
-![alt text](https://i.yapx.ru/I9OfW.png)
-
-Using arguments when calling the program
-![alt text](https://i.yapx.ru/I9OfX.png)
-
-One of the incoming emails :)
-![alt text](https://i.yapx.ru/I9Ofe.png)
-
-The program's interface (using the argument 'fr')
-![alt text](https://i.yapx.ru/I9OfY.png)
-
-One of the incoming emails :)
-![alt text](https://i.yapx.ru/I9Ofg.png)
-
-Contents of the "text" file
-![alt text](https://i.yapx.ru/I9OfU.png)
-
-Strong spam test ...
-![alt text](https://i.yapx.ru/I9Ofa.png)
-
-My poor main email ... It only took a couple of seconds.
-I did it just for the screen ;(
-![alt text](https://i.yapx.ru/I9Ofd.png)
 
 ```
 __________*_____*
