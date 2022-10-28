@@ -1,4 +1,6 @@
 # Mailspamer
+The program has been closed since the summer of 2022.
+
 A program that can be used to spam emails.Extensive functionality. The program is written in the c++programming language
 
 With this program, you can very much (if you have a sufficient number of Google accounts) load / spam someone's mail (not necessarily google), I checked, there are failures and instability due to a large number of emails , they begin to go not to the spam folder :)
