@@ -1,5 +1,5 @@
+# The program has been closed since the summer of 2022.
 # Mailspamer
-The program has been closed since the summer of 2022.
 
 A program that can be used to spam emails.Extensive functionality. The program is written in the c++programming language
 
